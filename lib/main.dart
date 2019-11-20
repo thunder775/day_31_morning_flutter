@@ -23,8 +23,7 @@ class _BouncingDotsState extends State<BouncingDots>
     _controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1000));
     _controller.repeat(min: .0, max: 1);
-    _curvedAnimation1 = CurvedAnimation(
-        parent: _controller, curve: JumpingCurve1(end: .4, begin: .0));
+
     _curvedAnimation2 = CurvedAnimation(
         parent: _controller, curve: JumpingCurve1(begin: .2, end: .6));
     _curvedAnimation3 = CurvedAnimation(
@@ -54,7 +53,9 @@ class _BouncingDotsState extends State<BouncingDots>
                     padding: const EdgeInsets.all(8.0),
                     child: SlideTransition(
                       position: Tween(begin: Offset(0, 0), end: Offset(0, -1.5))
-                          .animate(_curvedAnimation1),
+                          .animate(CurvedAnimation(
+                              parent: _controller,
+                              curve: JumpingCurve1(begin: .0, end: .4))),
                       child: Container(
                         height: 20,
                         width: 20,
@@ -104,14 +105,14 @@ class JumpingCurve1 extends Curve {
   double end;
   double width;
 
-  JumpingCurve1({@required this.begin, @required this.end,this.width=.2});
+  JumpingCurve1({@required this.begin, @required this.end});
 
   @override
   double transformInternal(double t) {
-    if (t > begin && t <= begin + width) {
+    if (t > begin && t <= begin + .2) {
       return (5 * t) - ((begin) * 10 / 2);
     }
-    if (t > begin + width && t <= end) {
+    if (t > begin + .2 && t <= end) {
       return ((end) * 10 / 2) - (5 * t);
     } else {
       return 0;
